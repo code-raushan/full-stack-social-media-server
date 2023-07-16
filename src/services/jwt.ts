@@ -1,7 +1,7 @@
 import JWT from 'jsonwebtoken';
 import {User} from '@prisma/client'
 
-const secretKey = 'shutup'
+const secretKey = "shutup"
 
 class JWTService{
     public static generateJWT(user:User){

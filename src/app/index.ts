@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import { prismaClient } from '../client/db';
 import { User } from './user';
 
+
+
 export async function initServer(){
     const app = express();
     app.use(bodyParser.json())
