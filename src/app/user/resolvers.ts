@@ -2,6 +2,7 @@ import axios from "axios";
 import { json } from "body-parser";
 import { prismaClient } from "../../client/db";
 import JWTService from "../../services/jwt";
+import { GraphqlContext } from "../../interfaces";
 interface Result{
     iss?: string;
     nbf?: string;
@@ -54,5 +55,8 @@ const queries = {
         return jwtToken;
         
     },
+    getCurrentUser: async(parent:any, args:any, ctx: GraphqlContext)=>{
+        return ctx.user;
+    }
 }
 export const resolvers = { queries };

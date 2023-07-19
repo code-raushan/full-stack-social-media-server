@@ -1,16 +1,18 @@
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
-import {expressMiddleware} from '@apollo/server/express4';
+import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
-import { prismaClient } from '../client/db';
 import { User } from './user';
 import cors from 'cors'
+import { GraphqlContext } from '../interfaces';
+import JWTService from '../services/jwt';
 
-export async function initServer(){
+
+export async function initServer() {
     const app = express();
     app.use(bodyParser.json())
     app.use(cors())
-    const graphqlServer = new ApolloServer({
+    const graphqlServer = new ApolloServer<GraphqlContext>({
         typeDefs: `
         ${User.types}
 
@@ -26,6 +28,19 @@ export async function initServer(){
     })
     // waiting for the graphql server to start
     await graphqlServer.start();
-    app.use("/graphql", expressMiddleware(graphqlServer));
+    app.use("/graphql", expressMiddleware(graphqlServer, {
+        context: async ({ req, res }) => {
+            return {
+                user: req.headers.authorization ? JWTService.decodeJWT(req.headers.authorization) : undefined
+                // user: req.headers.authorization ? {
+                //     id: "13465",
+                //     email: req.headers.authorization
+                // }: {
+                //     id: "12345",
+                //     email: "raushan"
+                // }
+            }
+        }
+    }));
     return app;
 }
