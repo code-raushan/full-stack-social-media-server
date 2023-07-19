@@ -55,8 +55,15 @@ const queries = {
         return jwtToken;
         
     },
+    // context is available for all the resolvers
     getCurrentUser: async(parent:any, args:any, ctx: GraphqlContext)=>{
-        return ctx.user;
+        // console.log(ctx.user);
+        const id = ctx.user?.id;
+        const user = await prismaClient.user.findUnique({where: {
+            id
+        }});
+        console.log(user);
+        return user;
     }
 }
 export const resolvers = { queries };
