@@ -32,13 +32,6 @@ export async function initServer() {
         context: async ({ req, res }) => {
             return {
                 user: req.headers.authorization ? JWTService.decodeJWT(req.headers.authorization) : undefined
-                // user: req.headers.authorization ? {
-                //     id: "13465",
-                //     email: req.headers.authorization
-                // }: {
-                //     id: "12345",
-                //     email: "raushan"
-                // }
             }
         }
     }));
