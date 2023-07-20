@@ -28,12 +28,22 @@ export async function initServer() {
     })
     // waiting for the graphql server to start
     await graphqlServer.start();
-    app.use("/graphql", expressMiddleware(graphqlServer, {
+    app.use("/graphql", expressMiddleware(graphqlServer, 
+        {
         context: async ({ req, res }) => {
+            // console.log(req.headers.authorization)
+            let token: string;
+            if(req.headers.authorization?.includes("Bearer ")){
+                token = req.headers.authorization.split("Bearer ")[1];
+            }else {
+                token = req.headers.authorization as string;
+            }
             return {
-                user: req.headers.authorization ? JWTService.decodeJWT(req.headers.authorization) : undefined
+                user: req.headers.authorization ? JWTService.decodeJWT(token) : undefined
+                
             }
         }
-    }));
+    }
+    ));
     return app;
 }
