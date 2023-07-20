@@ -20,10 +20,10 @@ model User{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tweets Tweet[]
+  tweets Post[]
 }
 
-model Tweet{
+model Post{
   id String @id @default(cuid())
   content String
   imageURL String?
