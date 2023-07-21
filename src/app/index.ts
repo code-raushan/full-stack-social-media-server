@@ -3,6 +3,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import { User } from './user';
+import {Post} from './post'
 import cors from 'cors'
 import { GraphqlContext } from '../interfaces';
 import JWTService from '../services/jwt';
@@ -15,15 +16,24 @@ export async function initServer() {
     const graphqlServer = new ApolloServer<GraphqlContext>({
         typeDefs: `
         ${User.types}
+        ${Post.types}
 
         type Query{
             ${User.queries}
-        }      
+        }    
+        type Mutation{
+            ${Post.mutations}
+        }  
         `,
         resolvers: {
             Query: {
                 ...User.resolvers.queries
-            }
+            }, 
+            Mutation :{
+                ...Post.resolvers.mutations
+            },
+            ...User.resolvers.extraResolvers,
+            ...Post.resolvers.extraResolvers
         }
     })
     // waiting for the graphql server to start
@@ -39,8 +49,7 @@ export async function initServer() {
                 token = req.headers.authorization as string;
             }
             return {
-                user: req.headers.authorization ? JWTService.decodeJWT(token) : undefined
-                
+                user: req.headers.authorization ? JWTService.decodeJWT(token) : undefined  
             }
         }
     }

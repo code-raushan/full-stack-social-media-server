@@ -3,6 +3,7 @@ import { json } from "body-parser";
 import { prismaClient } from "../../client/db";
 import JWTService from "../../services/jwt";
 import { GraphqlContext } from "../../interfaces";
+import { User } from "@prisma/client";
 interface Result{
     iss?: string;
     nbf?: string;
@@ -66,4 +67,13 @@ const queries = {
         return user;
     }
 }
-export const resolvers = { queries };
+
+const extraResolvers = {
+    User: {
+        posts: (parent: User)=>
+            prismaClient.post.findMany({where: {author: {id: parent.id}}})
+        
+    }
+}
+
+export const resolvers = { queries, extraResolvers };
