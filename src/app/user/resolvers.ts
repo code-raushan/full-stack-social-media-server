@@ -72,8 +72,7 @@ const queries = {
 const extraResolvers = {
     User: {
         posts: (parent: User)=>
-            prismaClient.post.findMany({where: {author: {id: parent.id}}})
-        
+            prismaClient.post.findMany({where: {author: {id: parent.id}}})       
     }
 }
 
