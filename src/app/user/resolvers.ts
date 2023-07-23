@@ -68,6 +68,7 @@ const queries = {
     }
 }
 
+// resolver to retrieve the posts mades the user
 const extraResolvers = {
     User: {
         posts: (parent: User)=>

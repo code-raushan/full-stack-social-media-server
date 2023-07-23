@@ -7,6 +7,10 @@ interface CreatePostData {
     imageURL?: string;
 }
 
+const queries = {
+    getAllPosts: async ()=> await prismaClient.post.findMany({orderBy: {createdAt: 'desc'}})
+}
+
 const mutations = {
     createPost: async (parent: any, { payload }: { payload: CreatePostData }, ctx: GraphqlContext) => {
         if (!ctx.user) {
@@ -23,12 +27,12 @@ const mutations = {
         return post;
     }
 }
+// resolver to retrieve the author of the post
 const extraResolvers = {
     Post: {
-        author: (parent: Post)=>{
-            prismaClient.user.findUnique({where: {id: parent.authorId}})
-        }
+        author: (parent: Post) => prismaClient.user.findUnique({where: {id: parent.authorId}})
+        
     }
 }
 
-export const resolvers = { mutations, extraResolvers };
+export const resolvers = { mutations, extraResolvers, queries };
