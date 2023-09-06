@@ -22,7 +22,6 @@ interface Result {
     alg?: string;
     kid?: string;
     typ?: string;
-
 }
 
 const queries = {
